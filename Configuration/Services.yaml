@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  Lemming\DataHandlerCli\:
+    resource: '../Classes/*'
+
+  Lemming\DataHandlerCli\Command\PatchCommand:
+    tags:
+      - name: 'console.command'
+        command: 'datahandler:patch'
+        schedulable: true

@@ -1,0 +1,30 @@
+{
+  "name": "christophlehmann/typo3-datahandler-cli",
+  "type": "typo3-cms-extension",
+  "description": "Use CLI commands to modify database records with the TYPO3 DataHandler. A lowlevel way for mass changes.",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "cli",
+    "datahandler",
+    "workspace"
+  ],
+  "authors": [
+    {
+      "name": "Christoph Lehmann",
+      "email": "post@christophlehmann.eu"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Lemming\\DataHandlerCli\\": "Classes/"
+    }
+  },
+  "require": {
+    "typo3/cms-core": "^12.4 || ^13.2"
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "datahandler_cli"
+    }
+  }
+}
