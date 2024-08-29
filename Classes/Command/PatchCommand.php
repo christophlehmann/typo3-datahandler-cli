@@ -23,6 +23,7 @@ class PatchCommand extends Command
     public function configure()
     {
         $this
+            ->setDescription('Modify database records with the DataHandler')
             ->setHelp(<<<HEREDOC
 Modify database records with the DataHandler. You must provide --whereClause or --records
 Examples:

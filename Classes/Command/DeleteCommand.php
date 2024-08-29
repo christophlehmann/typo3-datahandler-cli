@@ -18,6 +18,7 @@ class DeleteCommand extends Command
     public function configure()
     {
         $this
+            ->setDescription('Delete database records with the DataHandler')
             ->setHelp(<<<HEREDOC
 Delete database records with the DataHandler. You must provide --whereClause or --records
 Examples:
