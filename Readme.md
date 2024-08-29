@@ -20,6 +20,14 @@ Use CLI commands to modify database records with the TYPO3 DataHandler. A lowlev
     --jsonPatch '{"doktype": 3, "url": "https://typo3.org"}'
 ```
 
+**Delete page #100 and #200**
+
+```shell
+./bin/typo3 datahandler:delete \
+    --table pages \
+    --records 100,200
+```
+
 With `--workspace` changes can be applied in a workspace.
 
 # Status

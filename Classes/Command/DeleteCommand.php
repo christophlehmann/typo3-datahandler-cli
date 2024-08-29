@@ -13,27 +13,22 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class PatchCommand extends Command
+class DeleteCommand extends Command
 {
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
-
     public function configure()
     {
         $this
             ->setHelp(<<<HEREDOC
-Modify database records with the DataHandler. You must provide --whereClause or --records
+Delete database records with the DataHandler. You must provide --whereClause or --records
 Examples:
 
-Pages with title 'Detail' should not be included in search
+Pages with title 'Detail' should be deleted
 
-    ./bin/typo3 datahandler:patch --table pages --whereClause 'title="Detail"' --jsonPatch '{"no_search": 1}'
+    ./bin/typo3 datahandler:delete --table pages --whereClause 'title="Detail"'
 
-Page #2 should become an external link to typo3.org
+Page #2 should be deleted
 
-   ./bin/typo3 datahandler:patch --records 2 --table pages --jsonPatch '{"doktype": 3, "url": "https://typo3.org"}'
+   ./bin/typo3 datahandler:delete --table pages --records 2
 
 HEREDOC)
             ->addOption(
@@ -59,12 +54,6 @@ HEREDOC)
                 'w',
                 InputOption::VALUE_REQUIRED,
                 'Apply patch in this workspace id'
-            )
-            ->addOption(
-                'jsonPatch',
-                'p',
-                InputOption::VALUE_REQUIRED,
-                'For example {"hidden": 1}'
             );
     }
 
@@ -85,17 +74,6 @@ HEREDOC)
         }
         if (!isset($GLOBALS['TCA'][$table])) {
             $output->writeln('<error>Table does not exist</error>');
-            return Command::INVALID;
-        }
-
-        $jsonPatch = $input->getOption('jsonPatch');
-        if (!$jsonPatch) {
-            $jsonPatch = $io->ask('JSON Patch');
-        }
-        try {
-            $patch = json_decode($jsonPatch, true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $exception) {
-            $output->writeln('<error>Invalid jsonPatch: ' . $exception->getMessage() . '</error>');
             return Command::INVALID;
         }
 
@@ -126,21 +104,21 @@ HEREDOC)
             $records = array_unique($records);
         }
 
-        $output->writeln('<info>Patching ' . count($records) . ' records</info>');
+        $output->writeln('<info>Deleting ' . count($records) . ' records</info>');
 
-        $data = [];
+        $cmd = [];
         foreach ($records as $record) {
-            $data[$table][$record] = $patch;
+            $cmd[$table][$record]['delete'] = 1;
         }
 
         Bootstrap::initializeBackendAuthentication();
         $dataHandler = $this->getDataHandler();
-        $dataHandler->start($data, []);
+        $dataHandler->start([], $cmd);
         $dataHandler->admin = true;
         if ($workspaceId) {
             $dataHandler->BE_USER->workspace = $workspaceId;
         }
-        $dataHandler->process_datamap();
+        $dataHandler->process_cmdmap();
         foreach ($dataHandler->errorLog as $error) {
             $output->writeln('<error>' . $error . '</error>');
         }

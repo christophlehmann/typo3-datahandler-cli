@@ -7,6 +7,12 @@ services:
   Lemming\DataHandlerCli\:
     resource: '../Classes/*'
 
+  Lemming\DataHandlerCli\Command\DeleteCommand:
+    tags:
+      - name: 'console.command'
+        command: 'datahandler:delete'
+        schedulable: true
+
   Lemming\DataHandlerCli\Command\PatchCommand:
     tags:
       - name: 'console.command'
