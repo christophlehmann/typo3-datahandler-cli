@@ -1,4 +1,4 @@
-# TYPO3 Datahandler CLI
+# TYPO3 DataHandler CLI
 
 Use CLI commands to modify database records with the TYPO3 DataHandler. A lowlevel way for mass changes.
 
